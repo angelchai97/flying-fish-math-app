@@ -56,7 +56,7 @@ public class flyingMathFishView extends View
     // gameLevel == 1 is easy mode
     // gameLevel == 2 is Normal Mode
     // gameLevel == 3 is Hard Mode
-    private  int gameLevel = 3;
+    private  int gameLevel;
 
     // Finalized Question statement for Display
     private String statement;
@@ -182,11 +182,20 @@ public class flyingMathFishView extends View
             RefreshQuestion();
         }
         canvas.drawText(statement,400,195,questionPaint); // Draw the Question
+
+        Context c = getContext();
         // Check if the User has fill up all the "X" for the answer
         // If fill up the "X" mean have select all the digit for the Answer return true
         if (checkX(statement)) {
             // check the Answer and refresh question
-            checkAns(statement);
+            boolean answer = checkAns(statement);
+            if (answer== true){
+                Toast.makeText(c,"Correct" , Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(c,"Answer is "+ quiz[1] , Toast.LENGTH_LONG).show();
+            }
+
             RefreshQuestion();
         }
 
@@ -356,6 +365,7 @@ public class flyingMathFishView extends View
         // Get Question Answer eg. "12", then break them into digit by digit eg. ["1", "2"]
         digitNumber = String.valueOf(quiz[1]).chars().map(Character::getNumericValue).toArray();
 
+
         // Initial Add probability for each digit 0 to 9 to be display as Digit Answer, to make sure every digit got chance to being display
         for (int n = 0; n < 10; n++) {
             drng.addNumber(n, 0.2d);// Adds the digit with a probability of 0.2 (20%)
@@ -379,17 +389,19 @@ public class flyingMathFishView extends View
     }
 
     // Check the Answer
-    private void checkAns(String s) {
+    private boolean checkAns(String s) {
         String result = s.substring(s.lastIndexOf('=') + 1).trim();
         if (result.equals(String.valueOf(ans))){
             // If answer correct, score increase by 10 points
             score = score + 10;
+            return true;
         }else{
 
             // If answer incorrect, Life decrease by 1
             lifeCounterOFFish--;
             Vibrate();
             checkLife(); //Check if the life is 0
+            return false;
         }
     }
 
@@ -422,16 +434,28 @@ public class flyingMathFishView extends View
         operator = QuestionOperator(); // Get the Question operator +,-,x,÷
         // Get the number to build the question, operator parameter is to determine the number of digit based on game level
         int questionNum[] = QuestionNumber(operator);
-        if (operator.equals("-") || operator.equals("×"))  {
+        if (operator.equals("-") || operator.equals("÷"))  {
             if (questionNum[0] > questionNum[1]){
-                ans = questionNum[0] - questionNum[1];
+                if(operator.equals("-")) {
+                    ans = questionNum[0] - questionNum[1];
+                }else{
+                    ans = questionNum[0] / questionNum[1];
+                }
                 question = questionNum[0]+" " + operator +" "+ questionNum[1] + " = ";
             }else{
-                ans = questionNum[1] - questionNum[0];
+                if(operator.equals("-")) {
+                    ans = questionNum[1] - questionNum[0];
+                }else{
+                    ans = questionNum[1] / questionNum[0];
+                }
                 question = questionNum[1] +" "+ operator + questionNum[0] +" "+ " = ";
             }
         }else {
-            ans = questionNum[0] + questionNum[1];
+            if(operator.equals("+")) {
+                ans = questionNum[0] + questionNum[1];
+            }else{
+                ans = questionNum[0] * questionNum[1];
+            }
             question = questionNum[0] +" "+ operator +" "+ questionNum[1]+ " = ";
         }
         String ar[] = new String[2];
