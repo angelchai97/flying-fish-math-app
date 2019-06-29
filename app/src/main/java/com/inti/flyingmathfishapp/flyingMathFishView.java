@@ -3,6 +3,7 @@ package com.inti.flyingmathfishapp;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,14 +22,13 @@ import java.util.List;
 import java.util.Random;
 
 
-public class flyingMathFishView extends View
-{
+public class flyingMathFishView extends View {
     // All canvas resource
     private Bitmap fish[] = new Bitmap[2];
-    private Bitmap digit [] = new Bitmap[10];
-    private Bitmap bomb [] = new Bitmap[1];
+    private Bitmap digit[] = new Bitmap[10];
+    private Bitmap bomb[] = new Bitmap[1];
     private Bitmap shrimp[] = new Bitmap[1];
-    private  Bitmap backgroundImage;
+    private Bitmap backgroundImage;
     private Paint scorePaint = new Paint();
     private Paint questionPaint = new Paint();
     private Bitmap life[] = new Bitmap[2];
@@ -56,7 +56,10 @@ public class flyingMathFishView extends View
     // gameLevel == 1 is easy mode
     // gameLevel == 2 is Normal Mode
     // gameLevel == 3 is Hard Mode
-    private  int gameLevel;
+    //private  int gameLevelNum;
+    GameLevelNum mGamelevelNum;
+    //private int gameLevel = 1;
+
 
     // Finalized Question statement for Display
     private String statement;
@@ -149,6 +152,7 @@ public class flyingMathFishView extends View
         canvasHeight = canvas.getHeight();
 
 
+        //gameLevelNum = mGamelevel.getMgamelevel();
         canvas.drawBitmap(backgroundImage,0,0,null);
 
         // Fish Controller
@@ -464,13 +468,14 @@ public class flyingMathFishView extends View
         return ar;
     }
 
+
     // Generate Random number for Question based on Game Mode
     private int[] QuestionNumber(String operator) {
         Random digit = new Random();
-        if(gameLevel ==1){
+        if(mGamelevelNum.getMgamelevel() ==1){
             number1 = digit.nextInt(9 - 0) + 0;
             number2 = digit.nextInt(9 - 0) + 0;
-        }else if (gameLevel == 2){
+        }else if (mGamelevelNum.getMgamelevel() == 2){
             if(operator == "+" || operator == "-") {
                 number1 = digit.nextInt(99 - 10) + 10;
                 number2 = digit.nextInt(99 - 10) + 10;
@@ -520,7 +525,7 @@ public class flyingMathFishView extends View
     // Generate Question operator and store them in a list
     private String QuestionOperator() {
         List<String> operatorMath = new ArrayList<>();
-        if(gameLevel == 1) {
+        if(mGamelevelNum.getMgamelevel() == 1) {
             operatorMath.add("+");
             operatorMath.add("-");
         }else {
@@ -562,4 +567,5 @@ public class flyingMathFishView extends View
 
         }return true;
     }
+
 }

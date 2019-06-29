@@ -26,7 +26,8 @@ public class SplashActivity extends AppCompatActivity {
 
                }
                finally{
-                   Intent mainIntent = new Intent(SplashActivity.this,MainActivity.class);
+                   //Intent mainIntent = new Intent(SplashActivity.this,MainActivity.class);
+                   Intent mainIntent = new Intent(SplashActivity.this,Gamelevel.class);
                    startActivity(mainIntent);
                }
             }
